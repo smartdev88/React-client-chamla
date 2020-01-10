@@ -1,37 +1,32 @@
 import React from 'react';
 import './App.css';
+import Client from './components/Client';
 
 class App extends React.Component {
-
 	state = {
-    clients: [ { id: 1, nom: 'Lior chamla' }, { id: 2, nom: 'Magali Pernin' }, { id: 3, nom: 'Joseph Durand' } ],
-    nouveauClient: ''
+		clients: [ { id: 1, nom: 'Lior chamla' }, { id: 2, nom: 'Magali Pernin' }, { id: 3, nom: 'Joseph Durand' } ],
+		nouveauClient: ''
 	};
 	//Rappel: arrow function pour garder le bon this
 	handleDelete = (id) => {
-		console.log(id);
-		const clients = this.state.clients.slice();
-		const index = clients.findIndex(function(client) {
-			return client.id === id;
-		});
+		const clients = [ ...this.state.clients ];
+		const index = clients.findIndex(client => client.id === id);
 		clients.splice(index, 1);
-		this.setState({ clients: clients });
+		this.setState({ clients });
 	};
 	handleSubmit = (e) => {
-    e.preventDefault();
-    const id = new Date().getTime();
-    const nom = this.state.nouveauClient;
+		e.preventDefault();
+		const id = new Date().getTime();
+		const nom = this.state.nouveauClient;
 
-    const client = {id: id, nom: nom};
-    const clients = this.state.clients.slice();
-    clients.push(client);
+		// const clients = this.state.clients.slice();
+		const clients = [ ...this.state.clients ];
+		clients.push({ id, nom });
 
-    this.setState({clients: clients, nouveauClient: ''})
-  };
-  handleChange = (e) => {
-    // console.log(e.currentTarget.value);
-    const value = e.currentTarget.value;
-    this.setState({ nouveauClient: value });
+		this.setState({ clients, nouveauClient: '' });
+	};
+	handleChange = (e) => {
+		this.setState({ nouveauClient: e.currentTarget.value });
 	};
 	render() {
 		const title = 'Liste des clients';
@@ -40,13 +35,16 @@ class App extends React.Component {
 				<h1>{title}</h1>
 				<ul>
 					{this.state.clients.map((client) => (
-						<li key={client.id}>
-							{client.nom} <button onClick={() => this.handleDelete(client.id)}>X</button>
-						</li>
+						<Client details={client} onDelete={this.handleDelete}/>
 					))}
 				</ul>
 				<form onSubmit={this.handleSubmit}>
-					<input value={this.state.nouveauClient} onChange={this.handleChange} type="text" placeholder="Ajouter un client" />
+					<input
+						value={this.state.nouveauClient}
+						onChange={this.handleChange}
+						type="text"
+						placeholder="Ajouter un client"
+					/>
 					<button>Confirmer</button>
 				</form>
 			</div>
