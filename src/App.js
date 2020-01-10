@@ -2,6 +2,9 @@ import React from 'react';
 import './App.css';
 
 class App extends React.Component {
+
+  clientInput = React.createRef();
+
 	state = {
 		clients: [ { id: 1, nom: 'Lior chamla' }, { id: 2, nom: 'Magali Pernin' }, { id: 3, nom: 'Joseph Durand' } ]
 	};
@@ -14,7 +17,16 @@ class App extends React.Component {
 		});
 		clients.splice(index, 1);
 		this.setState({ clients: clients });
-	};
+  };
+  handleSubmit = (e) => {
+    e.preventDefault(); //empêcher la page à se recharger
+    console.log("Ca marche");
+    console.log(this.clientInput);
+    
+  //pour récupérer la valeur de l'input
+    console.log(this.clientInput.current.value);
+    
+  }
 	render() {
 		const title = 'Liste des clients';
 		return (
@@ -27,6 +39,10 @@ class App extends React.Component {
 						</li>
 					))}
 				</ul>
+        <form onSubmit={this.handleSubmit}>
+          <input ref={this.clientInput} type="text" placeholder="Ajouter un client"/>
+          <button>Confirmer</button>
+        </form>
 			</div>
 		);
 	}
