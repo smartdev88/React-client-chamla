@@ -3,10 +3,9 @@ import './App.css';
 
 class App extends React.Component {
 
-  clientInput = React.createRef();
-
 	state = {
-		clients: [ { id: 1, nom: 'Lior chamla' }, { id: 2, nom: 'Magali Pernin' }, { id: 3, nom: 'Joseph Durand' } ]
+    clients: [ { id: 1, nom: 'Lior chamla' }, { id: 2, nom: 'Magali Pernin' }, { id: 3, nom: 'Joseph Durand' } ],
+    nouveauClient: ''
 	};
 	//Rappel: arrow function pour garder le bon this
 	handleDelete = (id) => {
@@ -17,16 +16,23 @@ class App extends React.Component {
 		});
 		clients.splice(index, 1);
 		this.setState({ clients: clients });
+	};
+	handleSubmit = (e) => {
+    e.preventDefault();
+    const id = new Date().getTime();
+    const nom = this.state.nouveauClient;
+
+    const client = {id: id, nom: nom};
+    const clients = this.state.clients.slice();
+    clients.push(client);
+
+    this.setState({clients: clients, nouveauClient: ''})
   };
-  handleSubmit = (e) => {
-    e.preventDefault(); //empêcher la page à se recharger
-    console.log("Ca marche");
-    console.log(this.clientInput);
-    
-  //pour récupérer la valeur de l'input
-    console.log(this.clientInput.current.value);
-    
-  }
+  handleChange = (e) => {
+    // console.log(e.currentTarget.value);
+    const value = e.currentTarget.value;
+    this.setState({ nouveauClient: value });
+	};
 	render() {
 		const title = 'Liste des clients';
 		return (
@@ -39,10 +45,10 @@ class App extends React.Component {
 						</li>
 					))}
 				</ul>
-        <form onSubmit={this.handleSubmit}>
-          <input ref={this.clientInput} type="text" placeholder="Ajouter un client"/>
-          <button>Confirmer</button>
-        </form>
+				<form onSubmit={this.handleSubmit}>
+					<input value={this.state.nouveauClient} onChange={this.handleChange} type="text" placeholder="Ajouter un client" />
+					<button>Confirmer</button>
+				</form>
 			</div>
 		);
 	}
